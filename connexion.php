@@ -20,14 +20,14 @@ if(isset($_POST['connexion'])){
             $Pseudo = htmlentities($_POST['pseudo'], ENT_QUOTES, "UTF-8"); 
             $MotDePasse = htmlentities($_POST['mdp'], ENT_QUOTES, "UTF-8");
             //on se connecte à la base de données:
-            $mysqli = mysqli_connect("domaine.tld", "nom d'utilisateur", "mot de passe", "base de données");
+            $mysqli = mysqli_connect("localhost", "root", "root", "nom_de_la_base_de_donnees");
             //on vérifie que la connexion s'effectue correctement:
             if(!$mysqli){
                 echo "Erreur de connexion à la base de données.";
             } else {
                 //on fait maintenant la requête dans la base de données pour rechercher si ces données existent et correspondent:
                 //si vous avez enregistré le mot de passe en md5() il vous faudra faire la vérification en mettant mdp = '".md5($MotDePasse)."' au lieu de mdp = '".$MotDePasse."'
-                $Requete = mysqli_query($mysqli,"SELECT * FROM membres WHERE pseudo = '".$Pseudo."' AND mdp = '".$MotDePasse."'");
+                $Requete = mysqli_query($mysqli,"SELECT * FROM membres WHERE pseudo = '".$Pseudo."' AND mdp = '".md5($MotDePasse)."'");
                 //si il y a un résultat, mysqli_num_rows() nous donnera alors 1
                 //si mysqli_num_rows() retourne 0 c'est qu'il a trouvé aucun résultat
                 if(mysqli_num_rows($Requete) == 0) {
@@ -36,10 +36,57 @@ if(isset($_POST['connexion'])){
                     //on ouvre la session avec $_SESSION:
                     //la session peut être appelée différemment et son contenu aussi peut être autre chose que le pseudo
                     $_SESSION['pseudo'] = $Pseudo;
-                    echo "Vous êtes à présent connecté !";
+                    header("Location: http://localhost/Projet%202/"); // Redirection du navigateur
+                    exit;//on affiche pas le reste de la page pour faire une redirection parfaite et sans erreurs;
                 }
             }
         }
     }
 }
 ?>
+<!-- 
+Les balises <form> servent à dire que c'est un formulaire
+on lui demande de faire fonctionner la page connexion.php une fois le bouton "Connexion" cliqué
+on lui dit également que c'est un formulaire de type "POST" (récupéré via $_POST en PHP)
+Les balises <input> sont les champs de formulaire
+type="text" sera du texte
+type="password" sera des petits points noir (texte caché)
+type="submit" sera un bouton pour valider le formulaire
+name="nom de l'input" sert à le reconnaitre une fois le bouton submit cliqué, pour le code PHP (récupéré via $_POST["nom de l'input"] en PHP)
+ -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/style.css">
+    <title>Connexion</title>
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="index.php">Acceuil</a>
+        <a href="#">Thème</a>
+        <a href="#">Auteur</a>
+        <a href="inscription.php">Inscription</a>
+    </div>
+      
+    <!-- Use any element to open the sidenav -->
+    <input type="button" value="Open" name="sidebar button" onclick="openNav()"/>
+      
+    <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+    <div id="main">
+        <div class="form_center">
+            <form action="connexion.php" method="post" class="white_text">
+                Pseudo: <input type="text" name="pseudo" />
+                <br/>
+                Mot de passe: <input type="password" name="mdp" />
+                <br/>
+                <input type="submit" name="connexion" value="Connexion" />
+            </form>
+        </div>
+    </div>     
+</body>
+<script src="scripts.js"></script>
+</html>

@@ -4,21 +4,13 @@
 $BDD = array();
 $BDD['host'] = "localhost";
 $BDD['user'] = "root";
-$BDD['pass'] = "pierre";
+$BDD['pass'] = "root";
 $BDD['db'] = "nom_de_la_base_de_donnees";
 $mysqli = mysqli_connect($BDD['host'], $BDD['user'], $BDD['pass'], $BDD['db']);
 if(!$mysqli) {
     echo "Connexion non établie.";
     exit;
 }
-    //création automatique de la table membres, une fois créée, vous pouvez supprimer les lignes de code suivantes:
-    echo mysqli_query($mysqli,"CREATE TABLE IF NOT EXISTS `".$BDD['db']."`.`membres` ( `id` INT NOT NULL AUTO_INCREMENT , `pseudo` VARCHAR(25) NOT NULL , `mdp` CHAR(32) NOT NULL , PRIMARY KEY (`id`)) ENGINE = MyISAM;")?"Table membres créée avec succès, vous pouvez maintenant supprimer la ligne ". __LINE__ ." de votre fichier ". __FILE__ ."!":"Erreur création table membres: ".mysqli_error($mysqli);
-    //la table est créée avec les paramètres suivants:
-    //champ "id": en auto increment pour un id unique, peux vous servir pour une identification future
-    //champ "pseudo": en varchar de 0 à 25 caractères
-    //champ "mdp": en char fixe de 32 caractères, soit la longueur de la fonction md5()
-    //fin création automatique
-//par défaut, on affiche le formulaire (quand il validera le formulaire sans erreur avec l'inscription validée, on l'affichera plus)
 $AfficherFormulaire=1;
 //traitement du formulaire:
 if(isset($_POST['pseudo'],$_POST['mdp'])){//l'utilisateur à cliqué sur "S'inscrire", on demande donc si les champs sont défini avec "isset"
@@ -57,14 +49,42 @@ if($AfficherFormulaire==1){
     type="submit" sera un bouton pour valider le formulaire
     name="nom de l'input" sert à le reconnaitre une fois le bouton submit cliqué, pour le code PHP
      -->
-    <br />
-    <form method="post" action="inscription.php">
-        Pseudo (a-z0-9) : <input type="text" name="pseudo">
-        <br />
-        Mot de passe : <input type="password" name="mdp">
-        <br />
-        <input type="submit" value="S'inscrire">
-    </form>
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="CSS/style.css">
+        <title>Inscription</title>
+    </head>
+    <body>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="index.php">Acceuil</a>
+            <a href="#">Thème</a>
+            <a href="#">Auteur</a>
+            <a href="connexion.php">Connexion</a>
+        </div>
+
+        <!-- Use any element to open the sidenav -->
+        <input type="button" value="Open" name="sidebar button" onclick="openNav()"/>
+
+        <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+        <div id="main">
+            <div class="form_center">
+                <form method="post" action="inscription.php" class="white_text">
+                    Pseudo (a-z0-9) : <input type="text" name="pseudo">
+                    <br />
+                    Mot de passe : <input type="password" name="mdp">
+                    <br />
+                    <input type="submit" value="S'inscrire">
+                </form>
+            </div>
+        </div>     
+    </body>
+    <script src="scripts.js"></script>
+    </html>
     <?php
 }
 ?>
