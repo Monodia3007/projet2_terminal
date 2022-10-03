@@ -4,12 +4,11 @@
 $BDD = array();
 $BDD['host'] = "localhost";
 $BDD['user'] = "root";
-$BDD['pass'] = "root";
+$BDD['pass'] = "P13rr3/3007/";
 $BDD['db'] = "nom_de_la_base_de_donnees";
 $mysqli = mysqli_connect($BDD['host'], $BDD['user'], $BDD['pass'], $BDD['db']);
 if(!$mysqli) {
-    echo "Connexion non établie.";
-    exit;
+    die ("Connexion non établie.");
 }
 $AfficherFormulaire=1;
 //traitement du formulaire:

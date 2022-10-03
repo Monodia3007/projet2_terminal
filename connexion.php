@@ -20,17 +20,23 @@ if(isset($_POST['connexion'])){
             $Pseudo = htmlentities($_POST['pseudo'], ENT_QUOTES, "UTF-8"); 
             $MotDePasse = htmlentities($_POST['mdp'], ENT_QUOTES, "UTF-8");
             //on se connecte à la base de données:
-            $mysqli = mysqli_connect("localhost", "root", "root", "nom_de_la_base_de_donnees");
-            //on vérifie que la connexion s'effectue correctement:
-            if(!$mysqli){
-                echo "Erreur de connexion à la base de données.";
-            } else {
+            $dsn = "mysql:host=localhost;dbname=nom_de_la_base_de_donnees;charset=utf8mb4;";
+            $username = "root";
+            $password = "P13rr3/3007/";
+            try {
+                $pdo = new PDO($dsn, $username, $password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                ]);
+                //on vérifie que la connexion s'effectue correctement:
                 //on fait maintenant la requête dans la base de données pour rechercher si ces données existent et correspondent:
                 //si vous avez enregistré le mot de passe en md5() il vous faudra faire la vérification en mettant mdp = '".md5($MotDePasse)."' au lieu de mdp = '".$MotDePasse."'
-                $Requete = mysqli_query($mysqli,"SELECT * FROM membres WHERE pseudo = '".$Pseudo."' AND mdp = '".md5($MotDePasse)."'");
+                $query=$pdo->prepare("SELECT * FROM membres WHERE pseudo = '".$Pseudo."' AND mdp = '".md5($MotDePasse)."'");
+                $membre=$query->execute()->fetch();
+
                 //si il y a un résultat, mysqli_num_rows() nous donnera alors 1
                 //si mysqli_num_rows() retourne 0 c'est qu'il a trouvé aucun résultat
-                if(mysqli_num_rows($Requete) == 0) {
+                if(!$membre) {
                     echo "Le pseudo ou le mot de passe est incorrect, le compte n'a pas été trouvé.";
                 } else {
                     //on ouvre la session avec $_SESSION:
@@ -39,6 +45,8 @@ if(isset($_POST['connexion'])){
                     header("Location: http://localhost/Projet%202/"); // Redirection du navigateur
                     exit;//on affiche pas le reste de la page pour faire une redirection parfaite et sans erreurs;
                 }
+            } catch (Exception $exception){
+                echo "Erreur de connexion à la base de données.";
             }
         }
     }

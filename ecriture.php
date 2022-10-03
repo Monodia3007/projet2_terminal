@@ -4,7 +4,7 @@ session_start();
 $BDD = array();
 $BDD['host'] = "localhost";
 $BDD['user'] = "root";
-$BDD['pass'] = "root";
+$BDD['pass'] = "P13rr3/3007/";
 $BDD['db'] = "nom_de_la_base_de_donnees";
 $mysqli = mysqli_connect($BDD['host'], $BDD['user'], $BDD['pass'], $BDD['db']);
 if(isset($_POST['titre'],$_POST['article'],$_POST['theme'])){//l'utilisateur à cliqué sur "S'inscrire", on demande donc si les champs sont défini avec "isset"
